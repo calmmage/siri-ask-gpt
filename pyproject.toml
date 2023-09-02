@@ -8,12 +8,14 @@ packages = [{ include = "siri_ask_gpt" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+# gpt-kit
+openai = "*"
+# bot-template and calmlib
 fastapi = "*"
 uvicorn = "*"
-openai = "*"
-pydantic = "*"
 pydantic-settings = "*"
 python-dotenv = "*"
+loguru = "*"
 
 
 [tool.poetry.scripts]

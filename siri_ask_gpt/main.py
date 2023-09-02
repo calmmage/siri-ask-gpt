@@ -1,9 +1,10 @@
-# app.py
+import base64
 from typing import Optional
 
 import openai
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from loguru import logger
 
 from siri_ask_gpt.app_config import AppConfig
 
@@ -38,12 +39,33 @@ def ping_get():
 
 @app.get("/ask-gpt")
 def ask_gpt(question: str, model: Optional[str] = None,
-            max_tokens: Optional[int] = None):
+            max_tokens: Optional[int] = None, is_encoded=False) -> str:
+    """
+    Fetches a response from the GPT model based on the provided question.
+
+    Args:
+    - question (str): The query to be answered.
+    - model (Optional[str]): The GPT model to use. Defaults to app's default model.
+    - max_tokens (Optional[int]): Maximum number of tokens for the response. Defaults to app's setting.
+
+    Returns:
+    - str: The GPT model's response.
+    """
+
+    # Default values if not provided
     if not model:
         model = app_config.default_model
     if not max_tokens:
         max_tokens = app_config.default_max_tokens
+    if is_encoded:
+        # base64 decode question
+        question = base64.b64decode(question).decode('utf-8')
 
+    # Logging input details
+    logger.info(
+        f"Received question: {question} for model: {model} with max_tokens: {max_tokens}")
+
+    # Constructing and sending request to OpenAI's GPT
     response = openai.ChatCompletion.create(
         model=model,
         messages=[
@@ -60,7 +82,13 @@ def ask_gpt(question: str, model: Optional[str] = None,
         max_tokens=max_tokens,
     )
 
-    return response.choices[0]['message']['content']
+    # Extracting response content
+    gpt_response = response.choices[0]['message']['content']
+
+    # Logging the response
+    logger.info(f"Response from GPT: {gpt_response}")
+
+    return gpt_response
 
 
 if __name__ == '__main__':
