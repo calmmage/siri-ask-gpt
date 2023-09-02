@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "siri-ask-gpt"
+version = "0.1.0"
+description = ""
+authors = ["Reliable Magician <petr.b.lavrov@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "siri_ask_gpt" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.68.1"
+uvicorn = "^0.15.0"
+openai = "^0.10.0"
+
+[tool.poetry.scripts]
+siri_ask_gpt = 'cli:main'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
