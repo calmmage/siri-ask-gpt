@@ -11,6 +11,7 @@ load_dotenv()
 
 app = FastAPI()
 app_config = AppConfig()
+openai.api_key = app_config.openai_api_key
 
 
 @app.get("/")
@@ -42,12 +43,24 @@ def ask_gpt(question: str, model: Optional[str] = None,
         model = app_config.default_model
     if not max_tokens:
         max_tokens = app_config.default_max_tokens
+
     response = openai.ChatCompletion.create(
         model=model,
-        prompt=question,
+        messages=[
+            {
+                "role": "system",
+                "content": "You're an assistant responding to a voice query. "
+                           "Try to be concise and informative",
+            },
+            {
+                "role": "user",
+                "content": question,
+            },
+        ],
         max_tokens=max_tokens,
     )
-    return response
+
+    return response.choices[0]['message']['content']
 
 
 if __name__ == '__main__':
