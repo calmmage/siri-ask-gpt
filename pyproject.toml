@@ -11,6 +11,8 @@ python = "^3.10"
 fastapi = "^0.68.1"
 uvicorn = "^0.15.0"
 openai = "^0.10.0"
+pydantic = "^1.8.2"
+python-dotenv = "^1.0.0"
 
 [tool.poetry.scripts]
 siri_ask_gpt = 'cli:main'
