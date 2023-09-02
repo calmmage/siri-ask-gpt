@@ -13,7 +13,7 @@ RUN poetry config virtualenvs.create false
 RUN poetry install --no-dev
 
 # Specify the command to run on container start
-CMD ["uvicorn", "siri_ask_gpt.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "siri_ask_gpt/main.py"]
 
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
