@@ -1,4 +1,7 @@
 # app.py
+from typing import Optional
+
+import openai
 from dotenv import load_dotenv
 from fastapi import FastAPI
 
@@ -10,14 +13,41 @@ app = FastAPI()
 app_config = AppConfig()
 
 
-@app.post("/ask-gpt")
+@app.get("/")
 def read_root():
+    # describe api handles
+    return {
+        "handles": {
+            "/ping-post": "POST ping",
+            "/ping-get": "GET ping",
+            "/ask-gpt": "POST ask gpt - ask a question to gpt, ",
+        }
+    }
+
+
+@app.post("/ping-post")
+def ping_post():
+    return {"Hello": "World"}
+
+
+@app.get("/ping-get")
+def ping_get():
     return {"Hello": "World"}
 
 
 @app.get("/ask-gpt")
-def read_root():
-    return {"Hello": "World"}
+def ask_gpt(question: str, model: Optional[str] = None,
+            max_tokens: Optional[int] = None):
+    if not model:
+        model = app_config.default_model
+    if not max_tokens:
+        max_tokens = app_config.default_max_tokens
+    response = openai.ChatCompletion.create(
+        model=model,
+        prompt=question,
+        max_tokens=max_tokens,
+    )
+    return response
 
 
 if __name__ == '__main__':
