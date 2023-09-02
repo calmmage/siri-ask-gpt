@@ -10,12 +10,12 @@ app = FastAPI()
 app_config = AppConfig()
 
 
-@app.post("/ask_gpt")
+@app.post("/ask-gpt")
 def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/ask_gpt")
+@app.get("/ask-gpt")
 def read_root():
     return {"Hello": "World"}
 
